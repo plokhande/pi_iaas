@@ -23,17 +23,16 @@ Flask restplus which is an adaption of swagger is used for providing documentati
 Complete documentation for the API usage can be found at [localhost:5000] - where the flask app is running. This page also provides with options to test the API with the click of a button. Example screenshots can be found below
 
 POST /pi_job 
-[usage](screenshots/post_pi_job)
+![usage](screenshots/post_pi_job.png)
 
 GET /pi_job/{job_id}
-[usage](screenshots/get_pi_job)
+![usage](screenshots/get_pi_job.png)
 
 GET /download_pi_job/{job_id}
-[usage](screenshots/get_download_pi_job)
-
+![usage](screenshots/get_download_pi_job.png)
 
 
 ### DOCKER
 Docker has been used to provide containerization and infrastructure-as-a-code service.
 
-Docker compose file 
+Docker compose file is provided to execute the flask app in a container.
