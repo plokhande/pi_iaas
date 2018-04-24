@@ -1,13 +1,7 @@
 ## IAAS solution for PI 
 Code to containerize a flask app that generates the value of PI upto a given number of digits. 
 
-## DOCKER
-
-Docker has been used to provide containerization and infrastructure-as-a-code service.
-
-Docker compose file is provided to execute the flask app in a container. It is configured to expose the API port from the container to that of the hostip/localhost:5000.
-
-Installation steps:
+### Installation steps:
 
 1. Clone this repo by running:
 
@@ -24,6 +18,14 @@ Installation steps:
    ```
 
 4. Access the application on (hostip:5000/)
+
+
+## DOCKER
+
+Docker has been used to provide containerization and infrastructure-as-a-code service.
+
+Docker compose file is provided to execute the flask app in a container. It is configured to expose the API port from the container to that of the hostip/localhost:5000.
+
 
 ## FLASK
 
