@@ -2,8 +2,8 @@ version: '3'
 
 services:
   web:
-    image: piapp/flask
-    #build: ./pi_app
+    #image: piapp/flask
+    build: ./pi_app
     hostname: flaskapp-server
     ports:
       - "5000:5000"
