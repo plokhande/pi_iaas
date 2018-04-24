@@ -37,21 +37,17 @@ This takes one argument, the number of digits upto which the value of PI has to 
 
     a. The below json is returned on succesful trigger of the job.
 
-        ```
         {
             "success": true,
             "job_id": 0
         }
-        ```
 
     b. On failure, you get the response as 
 
-        ```
         {
             "success": false,
             "error": 'Error message'
         }
-        ```
 
 - **GET /pi_job/{job_id}**
 
