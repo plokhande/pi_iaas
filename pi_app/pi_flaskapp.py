@@ -33,14 +33,18 @@ class PiChudnovsky(Resource):
 
         :param int digits: digits of PI computation
         """
-        self.digits = api.payload
-        self.job_id = generate_id().id
-        self.n = math.floor(self.digits / self.DIGITS_PER_TERM + 1)
-        self.prec = math.floor((self.digits + 1) * math.log2(10))
-        self.tm_s = time()
-        cache_data[self.job_id] = (self.digits, self.tm_s, 0.0, 'In-progress')
-        self.compute()
-        return {'result': self.job_id}
+        try:
+            self.digits = api.payload
+            self.job_id = generate_id().id
+            self.n = math.floor(self.digits / self.DIGITS_PER_TERM + 1)
+            self.prec = math.floor((self.digits + 1) * math.log2(10))
+            self.tm_s = time()
+            cache_data[self.job_id] = (
+                self.digits, self.tm_s, 0.0, 'In-progress')
+            self.compute()
+            return {'success': True, 'job_id': self.job_id}
+        except Exception as es:
+            return {'success': False, 'error': es.text()}
 
     def compute(self):
         """ Computation """
@@ -53,7 +57,7 @@ class PiChudnovsky(Resource):
             with open(FILENAME, "w") as f:
                 f.write(str(pi))
             sleep(5)
-            cache_data[self.job_id] = (self.digits, self.tm_s, pi, 'completed')
+            cache_data[self.job_id] = (self.digits, self.tm_s, pi, 'complete')
 
         except Exception as e:
             raise
@@ -98,12 +102,24 @@ class generate_id(object):
 @api.doc(responses={'201': 'request created', '400': 'invalid request', '500': 'internal server error'})
 class getProgress(Resource):
     def get(self, job_id):
-        if cache_data[int(job_id)][3] == 'In-progress':
-            time_elapsed = '{} seconds'.format(round(time() - cache_data[int(job_id)][1]))
-            return {'status': cache_data[int(job_id)][3],
-                    'time_elapsed': time_elapsed}
-        else:
-            return {'status': cache_data[int(job_id)][3]}
+        try:
+            if cache_data[int(job_id)][3] == 'In-progress':
+                time_elapsed = '{} seconds'.format(
+                    round(time() - cache_data[int(job_id)][1]))
+                return {'success': True,
+                        'job_id': job_id,
+                        'digits': cache_data[int(job_id)][0],
+                        'status': cache_data[int(job_id)][3],
+                        'time_elapsed': time_elapsed}
+            else:
+                return {'success': True,
+                        'job_id': job_id,
+                        'digits': cache_data[int(job_id)][0],
+                        'status': cache_data[int(job_id)][3]}
+        except KeyError:
+            return {'success': False,
+                    'job_id': job_id,
+                    'error': 'Job does not exist'}
 
 
 @api.route('/download_pi_job/<job_id>')
