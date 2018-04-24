@@ -9,6 +9,3 @@ services:
       - "5000:5000"
     volumes:
       - "./pi_app:/pi_app"
-  nginx:
-    image: nginx:alpine
-    restart: always

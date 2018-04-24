@@ -4,7 +4,7 @@ PI Computation by Binary Splitting Algorithm with GMP libarary
 import math
 import itertools
 from gmpy2 import mpz, isqrt
-from time import time
+from time import time, sleep
 from flask import Flask, send_file
 from flask_restplus import Api, Resource, fields
 
@@ -52,9 +52,8 @@ class PiChudnovsky(Resource):
             FILENAME = "pi_{}.txt".format(self.job_id)
             with open(FILENAME, "w") as f:
                 f.write(str(pi))
+            sleep(5)
             cache_data[self.job_id] = (self.digits, self.tm_s, pi, 'completed')
-            #last_five = pi % 100000
-            #print("last 5 digits {}".format(last_five))
 
         except Exception as e:
             raise
@@ -83,6 +82,7 @@ class PiChudnovsky(Resource):
                 q_ab = q_am * q_mb
                 t_ab = q_mb * t_am + p_am * t_mb
             return [p_ab, q_ab, t_ab]
+
         except Exception as e:
             raise
 
@@ -98,7 +98,12 @@ class generate_id(object):
 @api.doc(responses={'201': 'request created', '400': 'invalid request', '500': 'internal server error'})
 class getProgress(Resource):
     def get(self, job_id):
-        return str(cache_data[int(job_id)][3])
+        if cache_data[int(job_id)][3] == 'In-progress':
+            time_elapsed = '{} seconds'.format(round(time() - cache_data[int(job_id)][1]))
+            return {'status': cache_data[int(job_id)][3],
+                    'time_elapsed': time_elapsed}
+        else:
+            return {'status': cache_data[int(job_id)][3]}
 
 
 @api.route('/download_pi_job/<job_id>')
