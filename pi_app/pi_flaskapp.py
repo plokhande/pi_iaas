@@ -54,9 +54,9 @@ class PiChudnovsky(Resource):
             sqrt_c = isqrt(self.E * one_sq)
             pi = (q * self.D * sqrt_c) // t
             FILENAME = "pi_{}.txt".format(self.job_id)
+            pi_val = "{}.{}".format((str(pi))[0], (str(pi))[1:])
             with open(FILENAME, "w") as f:
-                f.write(str(pi))
-            sleep(5)
+                f.write(pi_val)
             cache_data[self.job_id] = (self.digits, self.tm_s, pi, 'complete')
 
         except Exception as e:
