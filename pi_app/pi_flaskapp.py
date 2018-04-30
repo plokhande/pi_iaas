@@ -5,7 +5,7 @@ import math
 import itertools
 from gmpy2 import mpz, isqrt
 from time import time, sleep
-from flask import Flask, send_file
+from flask import Flask, send_file, request
 from flask_restplus import Api, Resource, fields
 
 app = Flask(__name__)
@@ -34,7 +34,9 @@ class PiChudnovsky(Resource):
         :param int digits: digits of PI computation
         """
         try:
-            self.digits = api.payload
+            content = request.get_json(force=True)
+            print("received content : {} ".format(content))
+            self.digits = int(content['digits']) #api.payload
             self.job_id = generate_id().id
             self.n = math.floor(self.digits / self.DIGITS_PER_TERM + 1)
             self.prec = math.floor((self.digits + 1) * math.log2(10))
@@ -44,7 +46,7 @@ class PiChudnovsky(Resource):
             self.compute()
             return {'success': True, 'job_id': self.job_id}
         except Exception as es:
-            return {'success': False, 'error': es.text()}
+            return {'success': False, 'error': str(es)}
 
     def compute(self):
         """ Computation """
